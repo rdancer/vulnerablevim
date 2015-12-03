@@ -1,1 +1,97 @@
+/* Style sheet for the Vulnerable Vim site */
+
+/* COPYRIGHT
+
+This style sheet is Copyright 2008, 2015 Jan Minar <rdancer@rdancer.org>
+
+Copying welcome, under the Creative Commons ``Attribution-Share Alike''
+License http://creativecommons.org/licenses/by-sa/2.0/uk/
+
+Code included herein, and accompanying this advisory, may be copied
+according to the GNU General Public License version 2, or the Vim
+license.  See the subdirectory ``licenses''.
+
+Various portions of the accompanying code were written by various
+parties.  Those parties may hold copyright, and those portions may be
+copied according to their respective licenses.
+
+*/
+
 @import url("../highlight/styles/default.css")
+
+.latestupdate {
+	font-style: italic;
+}
+.latestupdate:before { content: "("; }
+.latestupdate:after { content: ")"; }
+
+.header {
+	background: #79f;
+	/* color: #0dd; */
+	padding: 4px;
+	font-size: 200%;
+	font-family: arial;
+	border-bottom: #57c 5px solid;
+	font-weight: bold;
+}
+.header a, .vulntitle a {
+	text-decoration : none;
+}
+.header :link    { color: #ff0 }	/* unvisited links */
+.header :visited { color: #ff0 }	/* visited links   */
+.header :hover   { 			/* user hovers     */
+	color: #ff0;
+	text-decoration: none;
+}
+.header :active  {   			/* active links    */
+	color: yellow;
+}
+
+
+/*
+ * Anchors
+ */
+a {
+	text-decoration: none;
+}
+a:link,
+a:visited,
+a:active
+{
+	/* color: inherit; */
+}
+a:hover {
+	/* color: blue; */
+	text-decoration: underline;
+}
+
+
+
+/*
+body {
+	background: #acf;
+}
+*/
+
+/* DNW: The font and all would have to be the same as inside <pre> */
+/*
+body:after {
+	content: "EOF";
+	font-style: italic;
+}
+*/
+
+hr { border: 2px solid #57e }
+.vulntitle {
+	font-weight: bold;
+}
+.vulntitle a:visited, .vulntitle a:link {
+	text-decoration: none;
+	color: inherit;
+}
+.vulntitle a:active, .vulntitle a:hover {
+	color: blue;
+	text-decoration: underline;
+}
+
+/* :vim:sw=2: */

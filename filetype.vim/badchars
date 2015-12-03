@@ -1,0 +1,6 @@
+" |%#\n\t!<
+
+| : if cpoptions =~ '[b]', substitute with <Bar>
+\n: substitute with <NL>
+!:  immediately after ex command -- part of the command
+!:  as a part of !cmd, expanded to previous !cmd

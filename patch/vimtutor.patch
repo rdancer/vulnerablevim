@@ -1,0 +1,275 @@
+Problem:  The ``vimtutor'' command creates the temporary copy of the Vim
+	  Tutorial in a complicated and potentially insecure way.
+Solution: Use Vim builtin function tempname() to find the temporary file name
+
+Please NOTE: It is unclear this is in fact exploitable anywhere
+Please NOTE: The patched VMS script has not been tested.
+
+It also fixes the following error:
+
+Error detected while processing /usr/local/share/vim/vim72b/tutor/tutor.vim:
+line  163:
+E486: Pattern not found: ext .= '.utf-8'
+
+ -- There was a ``let'' missing in variable assignment.
+
+--- -	2008-07-17 18:31:37.500166631 +0100
++++ vimtutor.bat	2008-07-17 18:30:34.000000000 +0100
+@@ -9,8 +9,8 @@
+ :: When this fails or no xx argument was given, it tries using 'v:lang'
+ :: When that also fails, it uses the English version.
+ 
+-:: Use Vim to copy the tutor, it knows the value of $VIMRUNTIME
+-FOR %%d in (. %TMP% %TEMP%) DO IF EXIST %%d\nul SET TUTORCOPY=%%d\$tutor$
++:: tutor.vim itself must create the temporary copy of the tutorial
++SET TUTORCOPY=
+ 
+ SET xx=%1
+ 
+@@ -20,39 +20,27 @@
+ GOTO use_vim
+ :use_gui
+ 
+-:: Try making a copy of tutor with gvim.  If gvim cannot be found, try using
+-:: vim instead.  If vim cannot be found, alert user to check environment and
+-:: installation.
++:: If gvim cannot be found, try using vim instead.  If vim cannot be found,
++:: alert user to check environment and installation.
+ 
+-:: The script tutor.vim tells Vim which file to copy.
+ :: For Windows NT "start" works a bit differently.
+ IF .%OS%==.Windows_NT GOTO ntaction
+ 
+-start /w gvim -u NONE -c "so $VIMRUNTIME/tutor/tutor.vim"
++start /w gvim -u NONE -c "runtime tutor/tutor.vim"
+ IF ERRORLEVEL 1 GOTO use_vim
+ 
+-:: Start gvim without any .vimrc, set 'nocompatible'
+-start /w gvim -u NONE -c "set nocp" %TUTORCOPY%
+-
+ GOTO end
+ 
+ :ntaction
+-start "dummy" /b /w gvim -u NONE -c "so $VIMRUNTIME/tutor/tutor.vim"
++start "dummy" /b /w gvim -u NONE -c "runtime tutor/tutor.vim"
+ IF ERRORLEVEL 1 GOTO use_vim
+ 
+-:: Start gvim without any .vimrc, set 'nocompatible'
+-start "dummy" /b /w gvim -u NONE -c "set nocp" %TUTORCOPY%
+-
+ GOTO end
+ 
+ :use_vim
+-:: The script tutor.vim tells Vim which file to copy
+-vim -u NONE -c "so $VIMRUNTIME/tutor/tutor.vim"
++vim -u NONE -c "runtime tutor/tutor.vim"
+ IF ERRORLEVEL 1 GOTO no_executable
+ 
+-:: Start vim without any .vimrc, set 'nocompatible'
+-vim -u NONE -c "set nocp" %TUTORCOPY%
+-
+ GOTO end
+ 
+ :no_executable
+@@ -61,7 +49,6 @@
+ ECHO No vim or gvim found in current directory or PATH.
+ ECHO Check your installation or re-run install.exe
+ 
+ :end
+-:: remove the copy of the tutor
+-IF EXIST %TUTORCOPY% DEL %TUTORCOPY%
++:: Note: Setting a variable to an empty value will delete it
+ SET xx=
+--- -	2008-07-13 20:31:30.000000000 +0100
++++ src/vimtutor	2008-07-17 18:45:50.000000000 +0100
+@@ -4,7 +4,7 @@
+ 
+ # Usage: vimtutor [-g] [xx]
+ # Where optional argument -g starts vimtutor in gvim (GUI) instead of vim.
+-# and xx is a language code like "es" or "nl".
++# and xx is an ISO 639 language code like "es" or "nl".
+ # When an argument is given, it tries loading that tutor.
+ # When this fails or no argument was given, it tries using 'v:lang'
+ # When that also fails, it uses the English version.
+@@ -13,62 +13,34 @@
+ # have Vim installed with its version number.
+ # We anticipate up to a future Vim 8 version :-).
+ seq="vim vim8 vim75 vim74 vim73 vim72 vim71 vim70 vim7 vim6 vi"
+-if test "$1" = "-g"; then 
++if test x"$1" = x"-g"; then 
+   # Try to use the GUI version of Vim if possible, it will fall back
+   # on Vim if Gvim is not installed.
+   seq="gvim gvim8 gvim75 gvim74 gvim73 gvim72 gvim71 gvim70 gvim7 gvim6 $seq"
+   shift
+ fi
+ 
+-xx=$1
++xx="$1"
+ export xx
+ 
+-# We need a temp file for the copy.  First try using a standard command.
+-tmp="${TMPDIR-/tmp}"
+-TUTORCOPY=`mktemp $tmp/tutorXXXXXX || tempfile -p tutor || echo none`
+-
+-# If the standard commands failed then create a directory to put the copy in.
+-# That is a secure way to make a temp file.
+-if test "$TUTORCOPY" = none; then
+-	tmpdir=$tmp/vimtutor$$
+-	OLD_UMASK=`umask`
+-	umask 077
+-	getout=no
+-	mkdir $tmpdir || getout=yes
+-	umask $OLD_UMASK
+-	if test $getout = yes; then
+-		echo "Could not create directory for tutor copy, exiting."
+-		exit 1
+-	fi
+-	TUTORCOPY=$tmpdir/tutorcopy
+-	touch $TUTORCOPY
+-	TODELETE=$tmpdir
+-else
+-	TODELETE=$TUTORCOPY
+-fi
+-
++# tutor.vim itself must create the temporary copy of the tutorial
++TUTORCOPY=""
+ export TUTORCOPY
+ 
+-# remove the copy of the tutor on exit
+-trap "rm -rf $TODELETE" 0 1 2 3 9 11 13 15
+-
+-for i in $seq; do
+-	testvim=`which $i 2>/dev/null`
++for a in $seq; do
++	testvim="`which -- "$a" 2>/dev/null`"
+ 	if test -f "$testvim"; then
+-		VIM=$i
++		VIM="$a"
+ 		break
+ 	fi
+ done
+ 
+ # When no Vim version was found fall back to "vim", you'll get an error message
+ # below.
+-if test -z "$VIM"; then
++if test x"$VIM" = x; then
+ 	VIM=vim
+ fi
+ 
+ # Use Vim to copy the tutor, it knows the value of $VIMRUNTIME
+ # The script tutor.vim tells Vim which file to copy
+-$VIM -f -u NONE -c 'so $VIMRUNTIME/tutor/tutor.vim'
+-
+-# Start vim without any .vimrc, set 'nocompatible'
+-$VIM -f -u NONE -c "set nocp" $TUTORCOPY
++exec -- "$VIM" -u NONE -c 'runtime tutor/tutor.vim'
+--- -	2008-07-17 19:02:20.097818065 +0100
++++ vimtutor.com	2008-07-17 19:01:13.000000000 +0100
+@@ -1,7 +1,7 @@
+ $ !
+ $ !=====================================================================
+ $ !
+-$ !	VimTutor.com	version 29-Aug-2002
++$ !	VimTutor.com	version 2008-07-17
+ $ !
+ $ !	Author: Tom Wyant <Thomas.R.Wyant-III@usa.dupont.com>
+ $ !
+@@ -62,43 +62,24 @@
+ $	if f$type (vim) .eqs. "" then vim := $vim:vim
+ $ !
+ $ !
+-$ !	Build the name for our temp file.
+-$ !
+-$	tutfil = "sys$login:vimtutor_" + -
+-		f$edit (f$getjpi (0, "pid"), "trim") + "."
+-$	assign/nolog 'tutfil' TUTORCOPY
+-$ !
+-$ !
+-$ !	Copy the selected file to the temp file
+-$ !
+-$	assign/nolog/user nla0: sys$error
+-$	assign/nolog/user nla0: sys$output
+-$	vim -u "NONE" -c "so $VIMRUNTIME/tutor/tutor.vim"
+-$ !
+-$ !
+ $ !	Run the tutorial
++$ !     tutor.vim itself must create the temporary copy of the tutorial
+ $ !
+ $	assign/nolog/user sys$command sys$input
+-$	vim -u "NONE" -c "set nocp" 'p1' 'p2' 'p3' 'p4' 'p5' 'p6' 'p7' 'p8' 'tutfil'
+-$ !
+-$ !
+-$ !	Ditch the copy.
+-$ !
+-$ exit:
+-$	if f$type (tutfil) .nes. "" .and. f$search (tutfil) .nes. "" then -
+-$	    delete 'tutfil';*
+-$	if f$type (xx) .nes. "" then deassign xx
+-$	deassign TUTORCOPY
+-$	exit
++$	vim -u "NONE" -c "let $TUTORCOPY = '' | runtime tutor/tutor.vim" 'p1' 'p2' 'p3' 'p4' 'p5' 'p6' 'p7' 'p8'
+ $ !
+ $ !=====================================================================
+ $ !
+ $ !		Modification history
+ $ !
+-$ !	29-Aug-2002	T. R. Wyant
++$ !	2008-07-17	Jan Minar <rdancer@rdancer.org>
++$ !             Let tutor.vim itself create the temporary copy of the
++$ !			tutorial
++$ !             Change dates to ISO 8601
++$ !	2002-08-29	T. R. Wyant
+ $ !		Changed license to vim.
+ $ !		Fix error "input is not from a terminal"
+ $ !		Juggle documentation (copyright and contact to front,
+ $ !			modification history to end).
+-$ !	25-Jul-2002	T. R. Wyant
++$ !	2002-07-25	T. R. Wyant
+ $ !		Initial version
+--- -	2008-07-17 20:00:03.846675372 +0100
++++ src/gvimtutor	2008-07-17 19:57:50.000000000 +0100
+@@ -5,4 +5,4 @@
+ # Usage: gvimtutor [xx]
+ # See vimtutor for usage.
+ 
+-exec `dirname $0`/vimtutor -g "$@"
++exec -- "`dirname -- "$0"`/vimtutor" -g "$@"
+--- -	2008-06-21 19:38:59.000000000 +0100
++++ runtime/tutor/tutor.vim	2008-07-19 15:25:47.044081423 +0100
+@@ -1,6 +1,6 @@
+ " Vim tutor support file
+ " Author: Eduardo F. Amatria <eferna1@platea.pntic.mec.es>
+-" Last Change:	2008 Jun 21
++" Last Change:	2008 Jul 19
+ 
+ " This small source file is used for detecting if a translation of the
+ " tutor file exist, i.e., a tutor.xx file, where xx is the language.
+@@ -160,7 +160,7 @@
+ 
+ " If 'encoding' is utf-8 s:ext must end in utf-8.
+ if &enc == 'utf-8' && s:ext !~ '\.utf-8'
+-  s:ext .= '.utf-8'
++  let s:ext .= '.utf-8'
+ endif
+ 
+ " 2. Build the name of the file:
+@@ -179,4 +179,18 @@
+ 
+ " 4. Making the copy and exiting Vim:
+ e $TUTOR
+-wq! $TUTORCOPY
++
++" If $TUTORCOPY is set, it means the temporary file name has been found
++" already, perhaps one that is not going to be automatically deleted on
++" exit.  Older versions of vimtutor(1) expect this behaviour, so let's
++" be compatible.
++if $TUTORCOPY != ""
++  wq! $TUTORCOPY
++else
++" 5. Find the temporary file name:
++  let $TUTORCOPY = tempname()
++  file $TUTORCOPY
++  " 'readonly' is set, override it
++  w!
++  redraw
++endif

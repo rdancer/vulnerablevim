@@ -1,0 +1,13 @@
+#!/bin/sh
+# zipPlugin.vim.filter -- geterate zipPlugin.vim.ready
+
+sed \
+"
+# The two Are-we-loaded-yet flags
+s#\(loaded_zip\(Plugin\)\?\)#\1_$MAGIC#g
+
+# The actual function names
+# Don't modify error messages -- lame
+/^[[:space:]]*echohl[[:space:]]/n
+s@zip#\(Browse\|Read\|Write\)@_zip_\1_$MAGIC@g
+"

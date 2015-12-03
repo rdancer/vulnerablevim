@@ -1,0 +1,47 @@
+Some people have pointed out that some systems may have an insecure
+mktemp(1) implementation.  This code is stolen from
+``src/auto/configure'' -- which is an autoconf-generated file, but I
+haven't found the input file.  Apply on top of the last patch.
+
+--- -	2008-07-19 06:30:45.351825290 +0100
++++ src/configure.in	2008-07-19 06:30:36.000000000 +0100
+@@ -678,11 +678,34 @@
+ 	dnl    see what the interpreter is built from
+ 	AC_CACHE_VAL(vi_cv_path_python_plibs,
+ 	[
+-	    tmp_mkf="`mktemp`"
+-	    if test $? -ne 0 || ! test -f "${tmp_mkf}"; then
+-	    	echo "Error: Can't create temporary file. Aborting."
+-	    	exit 1
+-	    fi
++	    # Have a temporary directory for convenience.  Make it in the
++	    # build tree simply because there is no reason against having it
++	    # here.  Hook for its removal.  Note that there is a small window
++	    # in which the directory will not be cleaned: after its creation
++	    # but before its name has been assigned to `$tmp_mkf_dir'.
++            {
++              tmp_mkf_dir=
++              trap 'exit_status=$?
++              { test -z "$tmp_mkf_dir" || test ! -d "$tmp_mkf_dir" || rm -fr "$tmp_mkf_dir"; } && exit $exit_status
++            ' 0
++              trap '{ (exit 1); exit 1; }' 1 2 13 15
++            }
++            # Create a (secure) tmp_mkf_dir directory
++            
++            {
++              tmp_mkf_dir=`(umask 077 && mktemp -d "./confXXXXXX") 2>/dev/null` &&
++              test -n "$tmp_mkf_dir" && test -d "$tmp_mkf_dir"
++            }  ||
++            {
++              # Is $RANDOM on every system? --rdancer
++              tmp_mkf_dir=./conf$$-$RANDOM
++              (umask 077 && mkdir "$tmp_mkf_dir")
++            } ||
++            {
++               printf %s\\n "$0: Error: Cannot create a temporary directory in ." >&2
++               { (exit 1); exit 1; }
++            }
++	    tmp_mkf="$tmp_mkf_dir/Makefile"
+ 	    cat -- "${PYTHON_CONFDIR}/Makefile" - <<'eof' >"${tmp_mkf}"
+ __:
+ 	@echo "python_MODLIBS='$(MODLIBS)'"

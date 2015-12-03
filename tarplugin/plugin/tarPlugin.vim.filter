@@ -1,0 +1,13 @@
+#!/bin/sh
+# tarPlugin.vim.filter -- geterate tarPlugin.vim.ready
+
+sed \
+"
+# The two Are-we-loaded-yet flags
+s#\(loaded_tar\(Plugin\)\?\)#\1_$MAGIC#g
+
+# The actual function names
+# Don't modify error messages -- lame
+/^[[:space:]]*echohl[[:space:]]/n
+s@tar#\(Browse\|Read\|Write\)@_tar_\1_$MAGIC@g
+"

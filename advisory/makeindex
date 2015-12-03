@@ -1,0 +1,34 @@
+#!/usr/bin/perl -w
+# makeindex -- make the index file out of all the advisories
+
+#@files = <*.in>;
+
+#foreach $file (@files) {
+foreach $file (@ARGV) {
+	my $last_line = "";
+	my $nr = 0;	# There surely is a Perl built-in
+
+	$_ = $file;
+	s/.in$//;
+	#tr/[^[:alnum:]]//;
+	tr/["]//;
+	print "<div id=\"$_\"><pre>\n";
+	open INPUT, "<$file";
+	open RECODE, "|recode ..html";
+	while (<INPUT>) {
+		if (++$nr == 1) { # 1st line
+			s/^Vim: //;
+		} else {
+			next if /^1.\ /;
+		}
+		$current_line = $_;
+		chomp($current_line);
+		next unless ($current_line . $last_line) =~ /./;
+		$last_line = $current_line;
+		last if /^2\.\ /;
+		print RECODE;
+		$last_line = $_;
+	}
+	close RECODE;
+	print "</pre></div><hr>\n";
+}

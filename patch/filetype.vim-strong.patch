@@ -1,0 +1,36 @@
+--- /usr/local/share/vim/vim71/filetype.vim	2007-07-20 19:32:34.000000000 +0100
++++ filetype.vim	2007-08-05 23:01:49.000000000 +0100
+@@ -178,16 +178,19 @@
+     endif
+   endif
+ 
+-  exe "setf " . b:asmsyntax
++  if !did_filetype()
++    let &l:filetype = b:asmsyntax
++  endif
+ endfunc
+ 
+ func! s:FTasmsyntax()
++  let l:badchars = "/\\*?[|<> \t"
+   " see if file contains any asmsyntax=foo overrides. If so, change
+   " b:asmsyntax appropriately
+   let head = " ".getline(1)." ".getline(2)." ".getline(3)." ".getline(4).
+ 	\" ".getline(5)." "
+-  if head =~ '\sasmsyntax=\S\+\s'
+-    let b:asmsyntax = substitute(head, '.*\sasmsyntax=\(\S\+\)\s.*','\1', "")
++  if head =~ '\sasmsyntax=[^'.l:badchars.']\+\s'
++    let b:asmsyntax = substitute(head, '.*\sasmsyntax=\([^'.l:badchars.']\+\)\s.*','\1', "")
+   elseif ((head =~? '\.title') || (head =~? '\.ident') || (head =~? '\.macro') || (head =~? '\.subtitle') || (head =~? '\.library'))
+     let b:asmsyntax = "vmasm"
+   endif
+@@ -1264,7 +1267,9 @@
+     else
+       call s:FTasmsyntax()
+       if exists("b:asmsyntax")
+-	exe "setf " . b:asmsyntax
++	if !did_filetype()
++	  let &l:filetype = b:asmsyntax
++	endif
+       else
+ 	setf pov
+       endif

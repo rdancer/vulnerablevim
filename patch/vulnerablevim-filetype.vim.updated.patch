@@ -1,0 +1,36 @@
+--- -	2008-07-23 18:04:18.525265964 +0100
++++ runtime/filetype.vim	2008-07-23 18:03:54.000000000 +0100
+@@ -181,7 +181,7 @@
+     endif
+   endif
+ 
+-  exe "setf " . b:asmsyntax
++  exe "setf " . fnameescape(b:asmsyntax)
+ endfunc
+ 
+ func! s:FTasmsyntax()
+@@ -189,8 +189,13 @@
+   " b:asmsyntax appropriately
+   let head = " ".getline(1)." ".getline(2)." ".getline(3)." ".getline(4).
+ 	\" ".getline(5)." "
+-  if head =~ '\sasmsyntax=\S\+\s'
+-    let b:asmsyntax = substitute(head, '.*\sasmsyntax=\([a-zA-Z0-9]\+\)\s.*','\1', "")
++  let pattern = '.*\sasmsyntax=\([a-zA-Z0-9]\+\)\s.*'
++  if head =~ pattern
++    let a = substitute(head, pattern,'\1', "")
++    " Make sure the value is sane -- this is untrusted input
++    if a =~ '^[a-zA-Z0-9]\+$'
++      let b:asmsyntax = a
++    endif
+   elseif ((head =~? '\.title') || (head =~? '\.ident') || (head =~? '\.macro') || (head =~? '\.subtitle') || (head =~? '\.library'))
+     let b:asmsyntax = "vmasm"
+   endif
+@@ -1347,7 +1352,7 @@
+     else
+       call s:FTasmsyntax()
+       if exists("b:asmsyntax")
+-	exe "setf " . b:asmsyntax
++	exe "setf " . fnameescape(b:asmsyntax)
+       else
+ 	setf pov
+       endif

@@ -100,9 +100,9 @@ Script doesn't allow variables as arguments to commands, only literals,
 	execute &quot;split&quot; b 	  &quot; No alternative</code>
 Now whereas the setfiletype line can be written as:
 
-	if !did_filetype()
+<code class="vim">	if !did_filetype()
 	  let &amp;l:filetype = a
-	endif
+	endif</code>
 
 There is no alternative for the split command -- execute must be used.  Which
 is a pity, because we might not even necessarily have control over the file
@@ -117,14 +117,14 @@ quotes with a backslash, prepend and append a single quote, and that's it.  In
 Vim, this algorithm has been recently introduced in the form of the
 shellescape() function[2]:
 
-	$ ex
+<code class="sh">	$ ex
 	Entering Ex mode.  Type &quot;visual&quot; to go to Normal mode.
-	:let fmt = &quot;%l o'clock&quot;
+</code><code class="vim">	:let fmt = &quot;%l o'clock&quot;
 	:let fmt_escape = shellescape (fmt)
 	:echo fmt_escape
 	'%l o'\''clock'
 	:echo system (&quot;date +&quot; . fmt_escape)
-	 6 o'clock
+	 6 o'clock</code>
 
 Sanitizing an argument of an Ex command in a generic way is not going to be
 that easy.
@@ -221,7 +221,7 @@ payload, we have called this the ``weak'' exploit.
 3.4.2.1.1. Vulnerability
 
 Exploits the execute statements at filetype.vim lines 20, 25 or 31:
-    19	au BufNewFile,BufRead ?\+.orig,?\+.bak,?\+.old,?\+.new,?\+.rpmsave,?\+.rpmnew
+<code class="vim">    19	au BufNewFile,BufRead ?\+.orig,?\+.bak,?\+.old,?\+.new,?\+.rpmsave,?\+.rpmnew
    *20		\ exe &quot;doau filetypedetect BufRead &quot; . expand(&quot;&lt;afile&gt;:r&quot;)
     21	au BufNewFile,BufRead *~
     22		\ let s:name = expand(&quot;&lt;afile&gt;&quot;) |
@@ -234,7 +234,7 @@ Exploits the execute statements at filetype.vim lines 20, 25 or 31:
     29	au BufNewFile,BufRead ?\+.in
     30		\ if expand(&quot;&lt;afile&gt;:t&quot;) != &quot;configure.in&quot; |
    *31		\   exe &quot;doau filetypedetect BufRead &quot; . expand(&quot;&lt;afile&gt;:r&quot;) |
-    32		\ endif
+    32		\ endif</code>
 
 A (modified) file name is used as an argument to the ``execute'' command
 without proper quoting.  Crafted file name can be used to execute arbitrary Vim

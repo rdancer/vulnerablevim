@@ -10,5 +10,7 @@
   document.head.appendChild(script);
 
   console.log("Highlight script loaded.");
+
+  hljs.initHighlightingOnLoad();
 })();
 

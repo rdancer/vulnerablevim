@@ -1,0 +1,236 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>vulnerablevim by rdancer</title>
+
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/github-light.css">
+    <script src="javascripts/scale.fix.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <div class="wrapper">
+      <header>
+        <h1 class="header">vulnerablevim</h1>
+        <p class="header">The Vim Text Editor Security Advisories</p>
+
+        <ul>
+          <li class="download"><a class="buttons" href="https://github.com/rdancer/vulnerablevim/zipball/master">Download ZIP</a></li>
+          <li class="download"><a class="buttons" href="https://github.com/rdancer/vulnerablevim/tarball/master">Download TAR</a></li>
+          <li><a class="buttons github" href="https://github.com/rdancer/vulnerablevim">View On GitHub</a></li>
+        </ul>
+
+        <p class="header">This project is maintained by <a class="header name" href="https://github.com/rdancer">rdancer</a></p>
+
+
+      </header>
+      <section>
+        <pre>
+<a href="https://sites.google.com/a/rdancer.org/vulnerablevim/k">Arbitrary Code Execution in Commands: K, Control-], g]</a>
+
+Product  : Vim -- Vi IMproved
+Versions : &gt;= 3.0 (possibly older), &lt; 7.2.010 (?)
+Impact   : Arbitrary code execution
+Wherefrom: Local
+CVE      : CVE-2008-4101
+Original : <a href="http://www.rdancer.org/vulnerablevim-K.html">http://www.rdancer.org/vulnerablevim-K.html</a>
+
+Insufficient sanitization can lead to Vim executing arbitrary commands
+when performing keyword or tag lookup.  Ben Schmidt discovered this
+vulnerability.
+
+Last updated 2008-09-16
+</pre>
+
+<p></p>
+
+<hr>
+
+<pre><a href="https://sites.google.com/a/rdancer.org/vulnerablevim/netrw-credentials-dis">Netrw: FTP User Name and Password Disclosure</a>
+
+Product  : Vim -- Vi IMproved
+Versions : Tested with Vim 7.1.266, 7.2, autoload/netrw.vim v131, v109
+Impact   : Credentials disclosure
+Wherefrom: Remote
+Original : <a href="http://www.rdancer.org/vulnerablevim-netrw-credentials-dis.html">http://www.rdancer.org/vulnerablevim-netrw-credentials-dis.html</a>
+
+The Vim Netrw Plugin shares the FTP user name and password across all
+FTP sessions.  Every time Vim makes a new FTP connection, it sends the
+user name and password of the previous FTP session to the FTP server.
+
+Last updated 2008-08-12
+</pre>
+
+<hr>
+
+<div>
+<pre><a href="https://sites.google.com/a/rdancer.org/vulnerablevim/tarplugin-update">Unfixed Vulnerabilities in Tar Plugin Version 20</a>
+
+Product  : Vim -- Vi IMproved
+Version  : Vim &gt;= 7.0 (possibly older), present in 7.2c.002
+           autoload/tar.vim &gt;= 9 (possibly older), present in version 20
+Impact   : Arbitrary code execution
+Wherefrom: Local, remote
+CVE      : CVE-2008-2712
+Original : <a href="http://www.rdancer.org/vulnerablevim-tarplugin-update.html">http://www.rdancer.org/vulnerablevim-tarplugin-update.html</a>
+
+The Vim Tar Plugin vulnerabilities published in our previous advisories
+have been addressed, but the changes do not provide fix for all attack
+vectors.  We analyses the vulnerabilities remaining in
+``$VIMRUNTIME/autoload/tar.vim''.
+
+Last updated 2008-08-08
+</pre>
+</div>
+
+<hr>
+
+<div>
+<pre><a href="https://sites.google.com/a/rdancer.org/vulnerablevim/tarplugin-v3">Vim 7.2c.002 Fixes Arbitrary Command Execution when Handling Tar Archives</a>
+
+Product  : Vim -- Vi IMproved
+Version  : Vim &gt;= 7.0 (possibly older), fixed in 7.2c.002
+           autoload/tar.vim version &gt;= 9 (possibly older)
+Impact   : Arbitrary code execution
+Wherefrom: Local, remote
+Original : <a href="http://www.rdancer.org/vulnerablevim-tarplugin.v3.html">http://www.rdancer.org/vulnerablevim-tarplugin.v3.html</a>
+
+Vim update fixes a vulnerability that can lead to potential arbitrary
+code execution when handling tar archives.  The fnameescape() function
+does not sanitize input properly, which renders code that uses it
+vulnerable.  Patch 7.2c.002 fixes the vulnerability.
+
+Last updated 2008-08-08
+</pre>
+<hr>
+<div>
+<pre><a href="https://sites.google.com/a/rdancer.org/vulnerablevim/filetype-vim-updated">Flawed Fix of Arbitrary Code Execution Vulnerability in filetype.vim</a>
+
+Product  : Vim -- Vi IMproved
+Version  : Tested with Vim 7.2b.10, filetype.vim 2008-07-17
+Impact   : Arbitrary code execution
+Wherefrom: Local and remote
+CVE      : CVE-2008-2712
+Original : <a href="http://www.rdancer.org/vulnerablevim-filetype.vim.updated.html">http://www.rdancer.org/vulnerablevim-filetype.vim.updated.html</a>
+           <a href="http://www.rdancer.org/vulnerablevim-filetype.vim.updated.patch">http://www.rdancer.org/vulnerablevim-filetype.vim.updated.patch</a>
+           <a href="http://www.rdancer.org/vulnerablevim-latest.tar.bz2">http://www.rdancer.org/vulnerablevim-latest.tar.bz2</a>
+
+This is an update of a previous advisory.  Vim patch 7.1.300 which
+purported to fix the ``filetype.vim'' vulnerability did not fix the
+vulnerability.
+
+Last updated 2008-07-23
+</pre>
+</div>
+
+<hr>
+
+<div>
+<pre><a href="https://sites.google.com/a/rdancer.org/vulnerablevim/configure-in">Insecure Temporary File Creation During Build: Arbitrary Code Execution</a>
+
+Product  : Vim -- Vi IMproved
+Versions : &gt;=5.0 (possibly older; 4.6 and 3.0 not vulnerable), &lt;7.2b.014
+Impact   : Arbitrary code execution
+Wherefrom: Local
+Original : <a href="http://www.rdancer.org/vulnerablevim-configure.in.html">http://www.rdancer.org/vulnerablevim-configure.in.html</a>
+           <a href="http://www.rdancer.org/vulnerablevim-configure.in.patch">http://www.rdancer.org/vulnerablevim-configure.in.patch</a>
+
+Insecure temporary file creation during the build process is vulnerable
+to symbolic link attacks, and arbitrary code execution.  Patch provided.
+Update: There is no race condition.  All files can be prepared
+beforehand, facilitating a reliable attack.
+
+Last updated 2008-07-26
+</pre>
+</div>
+
+<hr>
+
+<div>
+<pre><a href="https://sites.google.com/a/rdancer.org/vulnerablevim/shellescape">Improper Implementation of shellescape()/Arbitrary Code Execution</a>
+
+Product  : Vim -- Vi IMproved
+Version  : &gt;= 7.2a.013; &lt; 7.2b.005; tested with 7.2b
+Impact   : Arbitrary code execution
+Wherefrom: Local, possibly remote
+Original : <a href="http://www.rdancer.org/vulnerablevim-shellescape.html">http://www.rdancer.org/vulnerablevim-shellescape.html</a>
+           <a href="http://www.rdancer.org/vulnerablevim-latest.tar.bz2">http://www.rdancer.org/vulnerablevim-latest.tar.bz2</a>
+
+Improper implementation of the shellescape() function and lack of
+documentation can result in untrusted data being insufficiently
+sanitized, possibly leading to arbitrary code execution.
+
+Last updated 2008-07-17
+</pre>
+</div>
+
+<hr>
+
+<div>
+<pre><a href="https://sites.google.com/a/rdancer.org/vulnerablevim/netrw-v5">Arbitrary code execution in Netrw version 127, Vim 7.2b</a>
+
+Product  : Vim -- Vi IMproved, Netrw
+Version  : Tested with Vim 7.2b, Netrw 127
+Impact   : Arbitrary code execution
+Wherefrom: Local, possibly remote
+Original : <a href="http://www.rdancer.org/vulnerablevim-netrw.v5.html">http://www.rdancer.org/vulnerablevim-netrw.v5.html</a>
+       <a href="http://www.rdancer.org/vulnerablevim-latest.tar.bz2">http://www.rdancer.org/vulnerablevim-latest.tar.bz2</a>
+
+Lack of sanitization throughout Netrw can lead to arbitrary code execution upon
+opening a directory with a crafted name.
+
+Last updated 2008-07-16
+</pre>
+</div>
+
+<hr>
+
+<div>
+<pre><a href="https://sites.google.com/a/rdancer.org/vulnerablevim/netrw-v2">Arbitrary code execution in Netrw, fully patched Vim 7.2a</a>
+
+Product  : Vim -- Vi IMproved
+Version  : Tested with 7.2a.10
+Impact   : Arbitrary code execution
+Wherefrom: Local, possibly remote
+Original : <a href="http://www.rdancer.org/vulnerablevim-netrw.v2.html">http://www.rdancer.org/vulnerablevim-netrw.v2.html</a>
+
+Lack of sanitization can lead to arbitrary code execution.
+
+Last updated 2008-07-16
+</pre>
+</div>
+
+<p></p>
+</div>
+
+<hr>
+
+<pre><a href="https://sites.google.com/a/rdancer.org/vulnerablevim/vulnerablevim">Collection of Vulnerabilities in Fully Patched Vim 7.1</a>
+
+Product  : Vim -- Vi IMproved
+Version  : Tested with 7.1.298 and 6.4; 7.2a.10 still partly vulnerable
+Impact   : Arbitrary code execution
+Wherefrom: Local and remote
+Original : <a href="http://www.rdancer.org/vulnerablevim.html">http://www.rdancer.org/vulnerablevim.html</a>
+
+Improper quoting in some parts of Vim written in the Vim Script can lead to
+arbitrary code execution upon opening a crafted file.
+
+Last updated 2008-07-16
+</pre>
+
+<p></p>
+      </section>
+      <footer>
+        <p><small>Hosted on <a href="https://pages.github.com">GitHub Pages</a> using the Dinky theme</small></p>
+      </footer>
+    </div>
+    <!--[if !IE]><script>fixScale(document);</script><![endif]-->
+		
+  </body>
+</html>

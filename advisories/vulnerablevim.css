@@ -25,28 +25,6 @@ copied according to their respective licenses.
 .latestupdate:before { content: "("; }
 .latestupdate:after { content: ")"; }
 
-.header {
-	background: #79f;
-	/* color: #0dd; */
-	padding: 4px;
-	font-size: 200%;
-	font-family: arial;
-	border-bottom: #57c 5px solid;
-	font-weight: bold;
-}
-.header a, .vulntitle a {
-	text-decoration : none;
-}
-.header :link    { color: #ff0 }	/* unvisited links */
-.header :visited { color: #ff0 }	/* visited links   */
-.header :hover   { 			/* user hovers     */
-	color: #ff0;
-	text-decoration: none;
-}
-.header :active  {   			/* active links    */
-	color: yellow;
-}
-
 
 /*
  * Anchors
@@ -81,10 +59,12 @@ body:after {
 }
 */
 
+/*
 hr { border: 2px solid #57e }
 .vulntitle {
 	font-weight: bold;
 }
+*/
 .vulntitle a:visited, .vulntitle a:link {
 	text-decoration: none;
 	color: inherit;
